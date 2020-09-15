@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行業攻略</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/echarts/4.8.0/echarts.js'></script>
+    <script src="https://kit.fontawesome.com/d18b20bddd.js" crossorigin="anonymous"></script>
+    @@include('app/link.html')
+    <link rel="stylesheet" href="./css/pages_scss/career/career_all.css">
+</head>
+
+<body class="car_body">
+    @@include('app/header.html')
+    <main class="car_con_width container" id="car_vue">
+        <div class="col-lg-12 col-md-12 car_con_area_all">
+            <div class="col-lg-3 col-md-12 car_con_area">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 car_con_list">
+                    <ul @touchmove="ulMove" @mousemove="ulMove()">
+                        <li class = "salary_rank" @click="changePlot" :class="{select_li: chooseIndustry == -1}"><span></span>薪水排行</li>
+                        <li v-for="(item, index) in industry" @click="changeContent(index, item.backgroundColor)" :class="[item.class, {select_li: chooseIndustry == index}]"><span></span>{{item.typeName}}</li>
+                    </ul>
+                    <div class="side_bar_img" v-if="screenWidth >= 992">
+                        <img class="side_bar_img_use" src="./img/side_bar.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-12 col-sm-12 col-12 car_con_area">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 car_title" v-show="chooseIndustry >= 0">
+                    <span class="col-lg-5 col-md-5 col-sm-12 col-12">選擇行業做比對 (請選1~2個)</span>
+                    <div class="col-lg-4 col-md-4 col-sm-7 col-8">
+                        <div class="choose_industry" v-for="(item, index) in sendDataTemp" v-if="item.name.length > 0">
+                            <i class="far fa-times-circle" @click="removeData(index)"></i>
+                            <span>{{item.name}}</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-5 col-4">
+                        <button class="btn_second" v-if="sendData" @click="viewPro">確認</button>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 car_con_pro" v-if="chooseIndustry >= 0">
+                    <div class="col-md-4 col-sm-5 col-5 car_con_pro_info" v-for="(itemDetail, index) in industry[chooseIndustry].detail" @click="storeData(chooseIndustry, index)" :class="{show_border : itemDetail.isCheck}">
+                        <img :src="itemDetail.src" />
+                        <span>{{itemDetail.name}}</span>
+                        <div class="car_con_pro_check">
+                            <i class="far fa-check-circle" v-if="itemDetail.isCheck"></i>
+                            <i class="far fa-times-circle" v-if="!itemDetail.isCheck"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 car_course_area" v-if="chooseIndustry >= 0">
+                    <h3>相關課程</h3>
+                    <div class="col-md-12 car_course_list">
+                        <div class="col-md-5 col-sm-5 col-6 car_course_list_info" v-for="(item, index) in industryCourse[chooseIndustry].detail">
+                            <a class="car_course_list_info_img" href="./course_introduce.html">
+                                <img :src="item.picture"/>
+                                <span :style="{backgroundColor:industry[chooseIndustry].backgroundColor}">{{industry[chooseIndustry].typeName}}</span>
+                            </a>
+                            <a href="./course_introduce.html">
+                                <p>{{item.name}}</p>
+                                <span class="car_course_list_info_word"><i class="fas fa-user-friends "></i>{{item.num}}人已參與此課程</span>
+                                <span class="car_course_list_info_hour">時數：{{item.time}}</span>
+                                <span class="car_course_list_info_price">NT${{item.price}}</span>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="./course_main.html">
+                        <button class="btn_primary">查看相關課程</button>
+                    </a>
+                </div>
+                <div class="col-lg-12 col-md-12 car_forum_area" v-if="chooseIndustry >= 0">
+                    <h3>相關論壇文章</h3>
+                    <div class="col-md-12 car_course_list">
+                        <div class="col-md-12 col-sm-12 col-12 car_forum_list_info" v-for="(item, index) in industryForum[chooseIndustry].detail" :style="{borderColor:industry[chooseIndustry].backgroundColor}">
+                            <a href="./forum_discuss.html">
+                                <span :style="{backgroundColor:industry[chooseIndustry].backgroundColor}">{{item.disClass}}</span>
+                                <span>&ensp;{{item.name}}</span>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="./forum_discuss.html">
+                        <button class="btn_primary">查看相關討論</button>
+                    </a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 car_con_plot_area" :class="{showPlot: showPlotControl}">
+                    <h3>工作三到五年薪水排行</h3>
+                    <div class="car_con_plot"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    @@include('app/footer.html')
+    @@include('app/script.html')
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script type="text/javascript" src="./js/career/career.js"></script>
+</body>
+
+</html>

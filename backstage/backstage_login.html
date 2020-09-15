@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>職引960後台登入</title>
+    <link rel="stylesheet" href="../css/app_public.css">
+    <link rel="stylesheet" href="../bootstrap/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="./css/backstage_login.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <form class="co1-6" method="POST" action="backstage_index.php">
+                <div class="logo">
+                    <img src="./img/LOGO_FINAL.svg" alt="">
+                </div>
+                <h2>後台登入</h2>
+
+                <div class="account">
+                    <label for="AD_ACCOUNT">帳號:</label>
+                    <input type="text" class="text" name="AD_ACCOUNT">
+                </div>
+                <div class="password">
+                    <label for="AD_PASSWORD">密碼:</label>
+                    <input type="password" class="text" name="AD_PASSWORD">
+                </div>
+                <div class="login">
+                    <input type="submit" value="登入" class="btn_primary submit">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</body>
+
+</html>

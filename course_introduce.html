@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    @@include('app/link.html')
+    <link rel="stylesheet" href="./css/pages_scss/course/course.css" />
+  </head>
+
+  <body>
+    <div id="course_main">
+      <div class="header_wrap">
+        <header class="header">
+          <div class="hamburger">
+            <button
+              class="hamburger hamburger--spring btn_switch"
+              type="button"
+            >
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </button>
+          </div>
+          <div class="logo">
+            <a href="front_index.html">
+              <img src="img/LOGO_FINAL.svg" alt="" />
+            </a>
+          </div>
+          <div class="header_nav">
+            <ul>
+              <li><a href="test_before.html" id="text_page">職涯分析</a></li>
+              <li><a href="career.html">行業攻略</a></li>
+              <li><a href="forum_discuss.html">職涯論壇</a></li>
+              <li><a href="course_main.html">探索課程</a></li>
+              <li><a href="post_intro.html">時光明信片</a></li>
+            </ul>
+          </div>
+          <div class="header_icon">
+            <div class="cart">
+              <button href="#">
+                <i class="fas fa-shopping-cart"></i>
+                <div class="cart_num"><span>{{cart_items.length}}</span></div>
+              </button>
+              <!-- <div class="cart_num"><span>1</span></div> -->
+            </div>
+
+            <div class="member">
+              <a href="member_sign_in.html"><i class="fas fa-user"></i></a>
+            </div>
+          </div>
+        </header>
+      </div>
+      <!-- cart -->
+      <div class="side_cart cart_off">
+        <div class="cart_close">
+          <span>購物車</span>
+          <button id="cart_close" class="btn_third">close</button>
+          <!-- <button class="btn_third" @click="delete_cookie">delete</button> -->
+        </div>
+        <div class="cart_course">
+          <p class="no_item" v-show="cart_items.length == 0">
+            購物車內無添加課程
+          </p>
+          <ul>
+            <li class="cart_item" v-for="(item,index) in cart_items">
+              <div class="cus_card">
+                <a href="#">
+                  <div class="card_img">
+                    <img :src="item.img" alt="" />
+                  </div>
+                  <div class="card_content">
+                    <p>{{item.course_title}}</p>
+                    <div class="card_content_scrb">
+                      <div class="card_content_msg">
+                        <span class="card_type" :class="item.color"
+                          >{{item.type}}</span
+                        >
+                        <!-- <span class="card_time">總計3小時</span> -->
+                        <span class="card_price">NT${{item.price}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+                <div class="remove">
+                  <button @click="remove_item(index)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="check_out_contain">
+          <div class="discount_title">
+            <p>購買兩堂課程，即享有8折優惠!</p>
+          </div>
+          <div class="price_check">
+            <ul>
+              <li><span>課程總金額:</span><span>NT${{add_total}}</span></li>
+              <li><span>折扣金額:</span><span>NT${{discount}}</span></li>
+            </ul>
+          </div>
+          <div class="price_total_btn">
+            <div class="price_total">
+              <span>總計:${{final_price}}</span>
+            </div>
+            <a href="course_orderlist.html" class="check_out">結帳</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="course_introduce container">
+        <!-- banner -->
+        <div class="row">
+          <div class="course_introduce">
+            <div class="course_intro_banner col-xl-12">
+              <div class="intro_banner">
+                <div class="intro_banner_pic">
+                  <div class="banner_img">
+                    <img
+                      src="img/course/course_img/E/課程照片-提昇你的簡報力：九個步驟快速提昇你的簡報力、溝通力.jpg"
+                      alt=""
+                    />
+                  </div>
+                  <div class="banner_type_btn">
+                    <div class="banner_type">
+                      <span>企業型</span>
+                    </div>
+                    <div class="banner_btn">
+                      <button class="add_cart btn_intro_addcart">
+                        <i class="fas fa-shopping-cart"></i>
+
+                        加入購物車
+                      </button>
+                      <button class="favorite btn_intro_favor">
+                        <i class="far fa-bookmark"></i>
+
+                        收藏
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="intro_banner_content">
+                  <div class="banner_title">
+                    <h1>九個步驟快速提昇你的簡報力、溝通力</h1>
+                    <div class="banner_teacher_price">
+                      <div class="banner_teacher_container">
+                        <a href="#teacher">
+                          <div class="banner_teacher_img">
+                            <img
+                              src="img/course/course_img/E/講師-課程-提昇你的簡報力：九個步驟快速提昇你的簡報力、溝通力.jpg"
+                              alt=""
+                            />
+                          </div>
+                          <span>講師:Leo</span>
+                        </a>
+                      </div>
+                      <div class="banner_price">
+                        <p><span>價格:</span>$660</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="banner_describe">
+                    <p>
+                      一位負責任的簡報者除了具備應有的專業內容，更需要有多元的教學法來提昇參與者的學習效益。
+                      這堂課專注在課綱上的編排、六大學習領域的平衡、內容的舖陳與呈現、簡報技巧的運用。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 學習到什麼/適合對象 -->
+        <div class="cus_learn row">
+          <div class="col-xl-6">
+            <div class="suitable_list">
+              <h2>這門課適合對象:</h2>
+              <ul>
+                <li>
+                  1.
+                  如果您想要學習更高階簡報設計或者更複雜的技巧，本課程可能並不適合你。
+                </li>
+                <li>
+                  2.
+                  本課程適合己有教學內容，但不知如何編制課程大綱的你。或者想要學習如何豐富教學內容的你。
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="learn_list col-xl-6">
+            <div class="learn_list">
+              <h2>我將從這堂課學到什麼?</h2>
+              <ul>
+                <li>1.掌握內容、社群跟商務三者對於行銷活動的重要性。</li>
+                <li>2.瞭解在進行行銷活動時，時間與金錢之前的關聯性。</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- 課程大綱 -->
+        <div class="cus_outline row">
+          <div class="cus_outline_contain col-xl-12">
+            <h2>課程大綱</h2>
+            <ol>
+              <li>章節一 | 奠定表達基礎</li>
+              <li>章節二 | 培養自信竅門</li>
+              <li>章節三 | 善用情緒表達</li>
+              <li>章節四 | 掌握聲音與肢體</li>
+              <li>章節五 | 開啟對話能力</li>
+              <li>章節六 | 建立個人風格</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- 講師介紹 -->
+        <div class="cus_teacher row">
+          <div class="teacher_img col-xl-4">
+            <div class="teacher_profile">
+              <img
+                src="img/course/course_img/E/講師-課程-提昇你的簡報力：九個步驟快速提昇你的簡報力、溝通力.jpg"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="teacher_intro col-xl-8">
+            <h2>講師:<span>Leo</span></h2>
+            <p>
+              台南出生、高雄長大。讀了造船工程科卻跑去當了三年的職業軍人。當職業軍人的同時又成為義務張老師電話諮詢志工。從業績掛單到月收入20萬時跑去開餐廳。在一無所有的時候走入了五術命理的領域。
+              才發現，這些過去是為了奠定現在的我。
+            </p>
+          </div>
+        </div>
+
+        <!-- 推薦課程 -->
+
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="hot_course">
+              <div class="course_session_title">
+                <h2>推薦課程</h2>
+              </div>
+              <ul class="auto_slider owl-carousel" v-if="hot_course.length > 0">
+                <li class="auto_slider_card" v-for="card in hot_course">
+                  <a href="course_introduce.html">
+                    <div class="auto_slider_card_pic">
+                      <img :src="card.ski_img" alt="" />
+                      <span
+                        class="course_type"
+                        :style="'background:' + card.ind_color + ';'"
+                        >{{card.ind_class}}</span
+                      >
+                    </div>
+                  </a>
+                  <div class="auto_slider_card_content">
+                    <a href="course_introduce.html">
+                      <p>{{card.ski_name}}</p>
+                    </a>
+                    <div class="card_content_scrb">
+                      <div class="card_content_join">
+                        <i class="fas fa-user-friends"></i>
+                        <span>{{card.ski_buy_num}}人已參與此課程</span>
+                      </div>
+                      <div class="card_content_msg">
+                        <span class="card_time">總計{{card.ski_time}}小時</span>
+                        <span class="card_price">NT${{card.ski_price}}</span>
+                      </div>
+                    </div>
+                    <div class="add_cart_btn">
+                      <button
+                        :class="'cus_' + card.ski_no"
+                        @click="add_cart(card)"
+                      >
+                        <i class="fas fa-shopping-cart"></i>
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      @@include('app/footer.html')
+    </div>
+
+    @@include('app/script.html')
+    <script src="./js/course/owl_auto_slide.js"></script>
+    <script src="./js/course/course_vue.js"></script>
+  </body>
+</html>

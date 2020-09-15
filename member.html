@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>職引960-會員</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/echarts/4.8.0/echarts.js'></script>
+    <script src="https://kit.fontawesome.com/d18b20bddd.js" crossorigin="anonymous"></script>
+    @@include('app/link.html')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datedropper/2.0/datedropper.min.css">
+    <link rel="stylesheet" href="./css/pages_scss/member/member_all.css">
+</head>
+
+<body class="mem">
+    <!-- header -->
+    <div class="header_wrap" v-show="screenWidth > 991">
+        <header class="header">
+            <div class="hamburger">
+                <button class=" hamburger hamburger--spring btn_switch" type="button">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </div>
+            <div class="logo">
+                <a href="front_index.html">
+                    <img src="img/LOGO_FINAL.svg" alt="">
+                </a>
+            </div>
+            <div class="header_nav">
+                <ul>
+                    <li><a href="test_before.html" id="text_page">職涯分析</a></li>
+                    <li><a href="career.html">行業攻略</a></li>
+                    <li><a href="forum_discuss.html">職涯論壇</a></li>
+                    <li><a href="course_main.html">探索課程</a></li>
+                    <li><a href="post_intro.html">時光明信片</a></li>
+                </ul>
+
+            </div>
+            <div class="header_icon">
+                <div class="cart">
+                    <button href="#"><i class="fas fa-shopping-cart"></i>
+                        <div class="cart_num"><span>1</span></div>
+                    </button>
+                    <!-- <div class="cart_num"><span>1</span></div> -->
+                </div>
+
+                <div class="member"><a href="member_sign_in.html"><i class="fas fa-user"></i></a></div>
+            </div>
+        </header>
+
+    </div>
+    <!-- cart -->
+    <div class="side_cart cart_off">
+        <div class="cart_close">
+            <span>購物車</span>
+            <button id="cart_close" class="btn_third">close</button>
+        </div>
+        <div class="cart_course">
+            <ul>
+                <li class="cart_item">
+                    <div class="cus_card">
+                        <a href="#">
+                            <div class="card_img">
+                                <img src="img/course/課程圖片.jpg" alt="">
+                            </div>
+                            <div class="card_content">
+                                <p>九個步驟快速提昇你的簡報力、溝通力</p>
+                                <div class="card_content_scrb">
+                                    <!-- <div class="card_content_join">
+                                        <i class="fas fa-user-friends"></i><span>6124人已參與此課程</span>
+                                    </div> -->
+                                    <div class="card_content_msg">
+                                        <span class="card_type">企業型</span>
+                                        <!-- <span class="card_time">總計3小時</span> -->
+                                        <span class="card_price">NT$660</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="remove">
+                            <button>
+                                <!-- <i class="fas fa-minus-circle"></i> -->
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="check_out_contain">
+            <div class="discount_title">
+                <p>購買兩堂課程，即享有8折優惠!</p>
+            </div>
+            <div class="price_check">
+                <ul>
+                    <li>
+                        <span>課程總金額:</span><span>$660</span>
+                    </li>
+                    <li>
+                        <span>折扣金額:</span><span>$60</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="price_total_btn">
+                <div class="price_total">
+                    <span>總計:$600</span>
+                </div>
+                <!-- <button class="check_out">結帳</button> -->
+                <a href="course_orderlist.html" class="check_out">結帳</a>
+            </div>
+        </div>
+    </div>
+    <main class="mem_con_width container" id="mem_change">
+        <div class="mem_list col-lg-2 col-md-12" v-if="(!rwdClickPage && screenWidth < 975) || (screenWidth >= 975)">
+            <a class="mem_con_ind_rwd" href="./front_index.html" v-if="975 > screenWidth">
+                <i class="fas fa-arrow-left"></i>
+                <h1>回首頁</h1>
+            </a>
+            <div class="mem_img_area">
+                <div class="mem_img">
+                    <img v-bind:src="member.src" />
+                </div>
+                <span>{{member.name}}</span>
+            </div>
+            <ul>
+                <li v-for="(item, index) in title" v-on:click="changePages(index), rwdChangePages(index)" :class="liTitle[index]">
+                    <span>{{item}}</span>
+                    <ul v-if="index == 3">
+                        <li v-for="(secItem, secIndex) in secTitle" v-on:click.stop="changeSecondPages(secIndex), rwdChangePages(secIndex)">
+                            <i class="fas fa-angle-right" v-if="liSecondArrow == secIndex"></i> {{secItem}}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-1" v-if="(!rwdClickPage && screenWidth < 975) || (screenWidth >= 975)"></div>
+        <div class="mem_con_area col-lg-9 col-md-12" v-if="(rwdClickPage && screenWidth < 975) || (screenWidth >= 975)">
+            <div class="mem_con_title_rwd" v-if="975 > screenWidth">
+                <i class="fas fa-arrow-left" @click="rwdChangePages(rwdClickPage)"></i>
+                <h1>{{currentPage}}<span v-if="currentPage == '我的收藏'"> - {{collecttionChange? "課程" : "文章"}}</span></h1>
+            </div>
+            <div class="container" v-if="currentPage == '會員資料'">
+                <div class="mem_img_area col-md-4 col-sm-12">
+                    <div class="mem_img">
+                        <img v-bind:src="memImage" />
+                    </div>
+                    <label for="input_image" class="btn_third">上傳圖片</label>
+                    <input type="file" accept="image/*" id="input_image" @change="changeImage">
+                </div>
+                <div class="mem_con_detail col-md-8 col-sm-11">
+                    <form class="mem_detail" action="#">
+                        <table>
+                            <tr>
+                                <th>會員資料</th>
+                            </tr>
+                            <tr>
+                                <td>名稱：</td>
+                                <td>
+                                    <span v-if="!fixMode">{{member.name}}</span>
+                                    <input type="text" v-model="member.name" v-if="fixMode">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>電話：</td>
+                                <td>
+                                    <span v-if="!fixMode">{{member.tel}}</span>
+                                    <input type="text" pattern="[0-9]{9,10}" v-model="member.tel" v-if="fixMode">
+                                </td>
+                            </tr>
+                            <tr v-if="fixMode && !fixNewCode">
+                                <td>輸入舊密碼：</td>
+                                <td>
+                                    <input type="password" pattern="[0-9a-zA-Z]{10}" v-model="member.codeCheck" @input="checkCode(member.codeCheck)">
+                                </td>
+                            </tr>
+                            <tr v-if="fixNewCode">
+                                <td>輸入新密碼：</td>
+                                <td>
+                                    <input type="password" pattern="[0-9a-zA-Z]{10}" v-model="member.newCode" @change="newCodeEqualWord = true">
+                                </td>
+                            </tr>
+                            <tr v-if="fixNewCode">
+                                <td>再次確認密碼：</td>
+                                <td>
+                                    <input class="new_code" type="password" pattern="[0-9a-zA-Z]{10}" v-model="member.checkNewcode" @input="checkNewCodeEqual(member.checkNewcode)">
+                                    <span v-if="newCodeEqualWord">{{newCodeEqual?"密碼相符":"密碼不相符"}}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>電子郵件：</td>
+                                <td>
+                                    <span>{{member.email}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="mem_det_btn_use">
+                            <button class="btn_third" @click="fixMode = !fixMode, oldDataTempUse(memberTemp)" v-if="fixMode">取消修改</button>
+                            <button class="btn_third" @click.prevent="oldDataTempSave(member)">{{fixMode?'確認修改':'修改資料'}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="container" v-if="currentPage == '我的分析'">
+                <div class="col-md-11 mem_con_title" v-if="(screenWidth >= 975) && !(currentPage == '會員資料')">
+                    <h1>{{currentPage}}</h1>
+                </div>
+                <div class="col-md-11 mem_tit_area" v-if="screenWidth >= 768 && checkAnalysisResult">
+                    <div class="col-md-4 mem_title">測驗日期</div>
+                    <div class="col-md-4 mem_title">適合類別</div>
+                </div>
+                <div class="col-md-11 mem_con_height" v-if="checkAnalysisResult">
+                    <div class="col-md-12 col-sm-11 col-11 mem_ana_area" v-for="(quizResult, index) in memberAnalysis">
+                        <div class="col-md-4 col-sm-4 col-3 mem_ana">{{quizResult.testDate}}</div>
+                        <div class="col-md-4 col-sm-4 col-3 mem_ana">{{quizResult.industType}}</div>
+                        <div class="col-md-4 col-sm-4 col-6 mem_ana">
+                            <div class="mem_click" v-on:click="showPage(index), plotRadar(index, analysisResult[index])">
+                                <span>詳細資訊</span>
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mem_ana_det">
+                            <div class="col-md-6 col-sm-12 mem_ana_det_left">
+                                <h2>{{quizResult.industType}}</h2>
+                                <section>{{quizResult.industTypeInfo}}</section>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mem_ana_det_right">
+                                <div class="mem_plot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mam_no_data" v-if="!checkAnalysisResult">
+                    <h3>您還沒有做過測驗喔，現在就去測驗吧</h3>
+                    <a href="./test_before.html">
+                        <button class="btn_primary">職涯測驗</button>
+                    </a>
+                    <!-- <button class="btn_primary">職涯測驗</button> -->
+                </div>
+            </div>
+            <div class="container" v-if="currentPage == '我的課程'">
+                <div class="col-md-11 mem_con_title" v-if="(screenWidth >= 975) && !(currentPage == '會員資料')">
+                    <h1>{{currentPage}}</h1>
+                </div>
+                <div class="col-md-11 mem_tit_area" v-if="screenWidth >= 768 && checkMemClass">
+                    <div class="col-md-4 mem_title">課程名稱</div>
+                </div>
+                <div class="col-md-11 mem_con_height" v-if="checkMemClass">
+                    <div class="col-md-12 col-sm-11 col-11 mem_cla_area" v-for="(memClass, index) in memberClass">
+                        <a class="col-md-12 mem_cla_area" href="#">
+                            <div class="col-md-6 col-sm-12 mem_cla">
+                                <img :src="memClass.src"/>
+                            </div>
+                            <div class="col-md-3 col-sm-12 mem_cla">{{memClass.name}}<br/>講師名稱：{{memClass.teacher}}</div>
+                            <div class="col-md-3 col-sm-12 mem_cla">
+                                <button class="btn_third">上課去</button>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-12 mam_no_data" v-if="!checkMemClass">
+                    <h3>您還沒有購買課程喔</h3>
+                </div>
+            </div>
+            <div class="container" v-if="currentPage == '我的收藏'">
+                <div class="col-md-11 mem_con_title" v-if="(screenWidth >= 975) && !(currentPage == '會員資料')">
+                    <h1>{{currentPage}} - {{collecttionChange? "課程" : "文章"}}</h1>
+                </div>
+                <div class="col-md-11 mem_con_height" v-if="!collecttionChange && checkMemArticle">
+                    <div class="col-md-12 col-sm-11 col-11 mem_art_area" v-for="(memArt, index) in memberArticle">
+                        <a class="col-md-12 mem_art_area" href="#">
+                            <div class="col-md-12 mem_art">
+                                <h3>{{memArt.title}}</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-11 mem_con_height" v-if="collecttionChange && checkMemClassCollection">
+                    <div class="col-md-12 col-sm-11 col-11 mem_cla_area" v-for="(memClass, index) in memberClassCollection">
+                        <a class="col-md-12 mem_cla_area" href="#">
+                            <div class="col-md-6 col-sm-12 mem_cla">
+                                <img :src="memClass.src"/>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mem_cla">{{memClass.name}}<br/>講師名稱：{{memClass.teacher}}</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-12 mam_no_data" v-if="!checkMemClassCollection && collecttionChange">
+                    <h3>您還沒有收藏課程喔</h3>
+                </div>
+                <div class="col-md-12 mam_no_data" v-if="!checkMemArticle && !collecttionChange">
+                    <h3>您還沒有收藏文章喔</h3>
+                </div>
+            </div>
+            <div class="container" v-if="currentPage == '我的明信片'">
+                <div class="col-md-11 mem_con_title" v-if="(screenWidth >= 975) && !(currentPage == '會員資料')">
+                    <h1>{{currentPage}}</h1>
+                </div>
+                <div class="col-md-11 mem_tit_area" v-if="screenWidth >= 768 && checkMemPostcard">
+                    <div class="col-md-3 mem_title">創建日期</div>
+                    <div class="col-md-3 mem_title">寄送日期</div>
+                    <div class="col-md-6 mem_title">明信片</div>
+                </div>
+                <div class="col-md-11 mem_con_height" v-if="checkMemPostcard">
+                    <div class="col-md-12 col-sm-11 col-11 mem_pos_area" v-for="(memPostCard, index) in memberPostCard">
+                        <div class="col-md-3 col-sm-12 mem_pos">{{rwdUse?'創建日期：':''}}{{memPostCard.creatDate}}</div>
+                        <div class="col-md-3 col-sm-12 mem_pos">{{rwdUse?'寄送日期：':''}}{{memPostCard.sentDate}}</div>
+                        <div class="col-md-6 col-sm-12 mem_pos">
+                            <a class="mem_pos_img" href="#" v-if="memPostCard.postSend">
+                                <i class="fas fa-search"></i>
+                                <span>查看</span>
+                            </a>
+                            <span v-if="!memPostCard.postSend">尚未寄發，敬請期待</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mam_no_data" v-if="!checkMemPostcard">
+                    <h3>您還沒有建立明信片喔，現在就來創建一個</h3>
+                    <a href="./post_intro.html">
+                        <button class="btn_primary">時光明信片</button>
+                    </a>
+                    <!-- <button class="btn_primary">時光明信片</button> -->
+                </div>
+            </div>
+            <div class="container" v-if="currentPage == '訂單紀錄'">
+                <div class="col-md-11 mem_con_title" v-if="(screenWidth >= 975) && !(currentPage == '會員資料')">
+                    <h1>{{currentPage}}</h1>
+                </div>
+                <div class="col-md-11 mem_tit_area" v-if="screenWidth >= 768 && checkMemOrder">
+                    <div class="col-md-3 mem_title">標題</div>
+                    <div class="col-md-2 mem_title">購買日期</div>
+                    <div class="col-md-2 mem_title">價格</div>
+                    <div class="col-md-2 mem_title">付款類型</div>
+                </div>
+                <div class="col-md-11 mem_con_height" v-if="checkMemOrder">
+                    <div class="col-md-12 col-sm-11 col-11 mem_ord_area" v-for="(memOrder, index) in memberOrder">
+                        <div class="col-md-3 col-sm-4 col-3 mem_ord">{{memOrder.title}}</div>
+                        <div class="col-md-2 col-sm-2 col-2 mem_ord">{{memOrder.buyDate}}</div>
+                        <div class="col-md-2 col-sm-2 col-2 mem_ord">{{memOrder.price}}</div>
+                        <div class="col-md-2 col-sm-4 col-3 mem_ord" v-if="screenWidth >= 768">信用卡</div>
+                        <div class="col-md-3 col-sm-4 col-5 mem_ord">
+                            <div class="mem_click" v-on:click="showOrderPage(index)">
+                                <span>詳細資訊</span>
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-11 col-11 mem_ord_det">
+                            <div class="col-md-12 col-sm-12 mem_ord_det_con" v-for="(memOrderList, indexOrderList) in memberOrderList[index]">
+                                <a class="col-md-12" href="#">
+                                    <div class="col-md-6 col-sm-6 mem_ord">
+                                        <img :src="memOrderList.src"/>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 mem_ord">{{memOrderList.name}}<br/>講師名稱：{{memOrderList.teacher}}</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mam_no_data" v-if="!checkMemOrder">
+                    <h3>您目前還沒有訂單紀錄喔</h3>
+                </div>
+            </div>
+            <!-- <div class="container" v-if="currentPage == '訊息'">
+                <div class="col-md-11 mem_con_title" v-if="(screenWidth >= 975) && !(currentPage == '會員資料')">
+                    <h1>{{currentPage}}</h1>
+                </div>
+                <div class="col-md-11 mem_tit_area" v-if="screenWidth >= 768 && checkMemMessage">
+                    <div class="col-md-3 mem_title">發文者</div>
+                    <div class="col-md-3 mem_title">發文日期</div>
+                    <div class="col-md-6 mem_title">訊息標題</div>
+                </div>
+                <div class="col-md-11 mem_con_height" v-if="checkMemMessage">
+                    <div class="col-md-12 col-sm-11 col-11 mem_mes_area" v-for="(memMessage, index) in memberMessage">
+                        <div class="col-md-3 col-sm-6 col-6 mem_pos" v-if="768 > screenWidth">發文者：</div>
+                        <div class="col-md-3 col-sm-6 col-6 mem_pos">系統管理員</div>
+                        <div class="col-md-3 col-sm-6 col-6 mem_pos" v-if="768 > screenWidth">發文日期：</div>
+                        <div class="col-md-3 col-sm-6 col-6 mem_pos">{{memMessage.sentDate}}</div>
+                        <div class="col-md-3 col-sm-6 col-6 mem_pos" v-if="768 > screenWidth">訊息標題：</div>
+                        <div class="col-md-6 col-sm-6 col-6 mem_pos">{{memMessage.title}}</div>
+                    </div>
+                </div>
+                <div class="col-md-12 mam_no_data" v-if="!checkMemMessage">
+                    <h3>您目前還沒有訊息喔</h3>
+                </div>
+            </div> -->
+        </div>
+    </main>
+    @@include('app/footer.html')
+    @@include('app/script.html')
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script type="text/javascript" src="./js/post_card/datedropper.pro.min.js"></script>
+    <script type="text/javascript" src="./js/member/member.js"></script>
+    <script src="./js/header.js"></script>
+</body>
+
+</html>

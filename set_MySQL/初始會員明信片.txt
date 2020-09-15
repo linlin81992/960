@@ -1,0 +1,7 @@
+會員編號	正面圖片	背面圖片	創造日期	寄送日期	是否寄出	別在意
+1	./img/member/member_PostCard/front.png	./img/member/member_PostCard/back.png	2020-04-20	2020-05-01	0	0
+1	./img/member/member_PostCard/front.png	./img/member/member_PostCard/back.png	2020-05-20	2020-07-31	0	0
+1	./img/member/member_PostCard/front.png	./img/member/member_PostCard/back.png	2020-08-20	2020-09-29	0	0
+12	./img/member/member_PostCard/front.png	./img/member/member_PostCard/back.png	2020-04-20	2020-04-28	0	0
+13	./img/member/member_PostCard/front.png	./img/member/member_PostCard/back.png	2020-05-04	2020-06-04	0	0
+16	./img/member/member_PostCard/front.png	./img/member/member_PostCard/back.png	2020-06-20	2020-08-23	0	0

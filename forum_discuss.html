@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>forum_discuss</title>
+  <link rel="stylesheet" href="./bootstrap/bootstrap-grid.min.css" />
+  <link rel="stylesheet" href="./css/app_public.css" />
+  <link rel="stylesheet" href="./css/pages_scss/forum/forum.css" />
+
+</head>
+
+<body>
+
+  @@include('app/header.html')
+
+  <div id="forum_discuss" class="container-fluid">
+    <div class="wrap row">
+      <div class="side_wrap col-lg-3">
+        <div class="dis_side main_side_bar">
+          <ul>
+            <li v-for="(type, index) in category" @click="search(type.link_title)">
+              <a href="#" :class="'point' + index" @click="cart_click_bg"><span></span>{{type.link_title}}</a>
+            </li>
+          </ul>
+          <div class="side_bar_img">
+            <img src="./img/side_bar.svg" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div class="right_panel col-lg-9">
+        <!-- 搜尋框 -->
+        <div class="search_wrap">
+          <div class="search_wrap_line">
+            <i class="fas fa-search"></i>
+            <input type="search" placeholder="請輸入關鍵字" id="text_input" v-model="filter" @keyup.enter="submit">
+            <button id="search_btn" @click="searchContent()">搜尋</button>
+          </div>
+        </div>
+        <!-- 下拉選單 -->
+        <div class="select">
+          <div class="select_wrap">
+            <span class="dis_dropdown" @click="toggleDropdown" :class="{'expanded': isOpen}">
+              <input type="radio" name="orderSelect" v-model="select" value="選擇分類" checked="checked" id="forLeft"
+                disabled />
+              <label for="forLeft">選擇分類</label>
+              <input type="radio" name="orderSelect" v-model="select" value="全部文章" checked="checked" id="all"
+                @click="toggleDropdown" />
+              <label for="all">全部文章</label>
+              <input type="radio" name="orderSelect" v-model="select" value="熱門討論" id="popular"
+                @click="toggleDropdown" />
+              <label for="popular">熱門文章</label>
+              <input type="radio" name="orderSelect" v-model="select" value="問題討論" id="question"
+                @click="toggleDropdown" />
+              <label for="question">問題討論</label>
+              <input type="radio" name="orderSelect" v-model="select" value="經驗分享" id="share" @click="toggleDropdown" />
+              <label for="share">經驗分享</label>
+            </span>
+          </div>
+        </div>
+
+        <div class="bulletin">
+          <marquee class="blink_text">
+            <div class="bulletin_text_wrap" v-for="(ann,index) in announcement">
+              <span>公告</span>
+              <span class="bulletin_tex">{{ann.ANN_CONTENT}}</span>
+            </div>
+          </marquee>
+        </div>
+
+        <div class="dis_body">
+          <!--瀏覽留言區-->
+          <div class="tab_contents">
+            <div class="msg_content" v-for="(messages,index) in searchResult">
+              <div class="mem_info" @click="openContent(index,1)">
+                <div class="info_list">
+                  <div class="img_div">
+                    <img :src="messages.MEM_PIC" alt="pic" class="dis_img" />
+                  </div>
+                  <div class="dis_name">{{messages.MEM_NAME}}</div>
+                  <div class="dis_date">{{messages.DIS_DATE}}</div>
+                </div>
+                <div class="tags_list">
+                  <span class="type_tag" :style="messages.IND_COLOR">{{messages.IND_CLASS}}</span>
+                  <span class="type_tag">{{messages.DIS_CLASS}}</span>
+                </div>
+              </div>
+              <div class="msg_title open_dialog" @click="openContent(index)">
+                {{messages.DIS_NAME}}
+              </div>
+              <div class="msg_textarea" @click="openContent(index)">
+                {{messages.DIS_CONTENT}}
+              </div>
+              <div class="msg_btn">
+                <button class="heart">
+                  <i class="fas fa-heart" :class="{'colorRed':messages.isHeart}" @click="heart_btn(index,1)"></i>
+                </button>
+                <button class="gray_btn count" @click="openContent(index)">
+                  <i class="far fa-comment-alt"></i>
+                  <span>{{messages.DIS_COL_NUM}}</span>
+                </button>
+                <button class="gray_btn" :class="{'colorGray':isCollect}" @click="collect_btn(index)">
+                  <i class="fas fa-bookmark"></i>
+                </button>
+                <button class="gray_btn" @click="accuse_btn">
+                  <i class="fas fa-exclamation-circle"></i>
+                </button>
+              </div>
+            </div>
+
+            <!--頁碼-->
+            <div class="pagination_block">
+              <ul class="pagination">
+                <li><a href="#">‹</a></li>
+                <li><a href="#" class="-on">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">›</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <a href="./forum_form.html" class="pencil_btn">
+            <i class="fas fa-edit"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    @@include('app/footer.html')
+
+
+    <!--燈箱！！！-->
+    <!--點擊留言板跳出的燈箱-->
+    <div class="forum_overlay" :class="{'-open':contentIsOpen}" @click="closeOverlay">
+      <div class="forum_checkMsg" @click.stop>
+        <div class="close_btn">
+          <button type="button" class="btn_modal_close btn_third" @click="close_openContent">
+            返回
+          </button>
+        </div>
+        <div class="feedback_wrap">
+          <!--留言板內容-->
+          <div class="check_content">
+            <div class="mem_info">
+              <div class="info_list">
+                <div class="img_div">
+                  <img :src="msg.MEM_PIC" alt="" class="dis_img" />
+                </div>
+                <div class="dis_name">{{msg.MEM_NO}}</div>
+                <div class="dis_date">{{msg.DIS_DATE}}</div>
+              </div>
+              <div class="tags_list">
+                <span class="type_tag">{{msg.IND_CLASS}}</span>
+                <span class="type_tag">{{msg.DIS_CLASS}}</span>
+              </div>
+            </div>
+            <div class="msg_title open_dialog">
+              {{msg.DIS_NAME}}
+            </div>
+            <div class="msg_textarea">
+              {{msg.DIS_CONTENT}}
+            </div>
+            <div class="msg_btn">
+              <button class="heart">
+                <i class="fas fa-heart" :class="{'colorRed':isHeart}" @click="heart_btn(index,2)"></i>
+              </button>
+              <button class="gray_btn">
+                <i class="far fa-comment-alt"></i>
+              </button>
+              <button class="gray_btn" @click="collect_btn">
+                <i class="fas fa-bookmark"></i>
+              </button>
+              <button class="gray_btn" @click="accuse_btn">
+                <i class="fas fa-exclamation-circle"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="feedback_count">共{{msg.DIS_COL_NUM}}則回覆</div>
+        <!--回應留言區-->
+        <div class="forum_feedback">
+          <div class="feedback_content" v-for="(msg,index) in box_msg">
+            <div class="info_list">
+              <div class="img_div">
+                <img :src="msg.MEM_PIC" alt="" class="dis_img" />
+              </div>
+              <div class="dis_name">{{msg.MEM_NAME}}</div>
+              <div class="dis_date">{{msg.DIS_MES_DATE}}</div>
+            </div>
+            <div class="msg_textarea">
+              {{msg.DIS_MES_CONTENT}}}
+            </div>
+            <div class="msg_btn">
+              <button class="heart">
+                <i class="fas fa-heart" @click="heart_btn_feedback"></i>
+              </button>
+              <button class="gray_btn" @click="accuse_btn">
+                <i class="fas fa-exclamation-circle"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="leave_msg_wrap">
+            <div class="leave_msg">
+              <textarea name="" id="send_msg" placeholder="請輸入訊息..."></textarea>
+            </div>
+            <div class="confirm_send_btn">
+              <input type="submit" value="送出" class="btn_third" id="send_msg_btn" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!--點擊檢舉跳出燈箱-->
+    <div class="impeachment_overlay" :class="{'-on':accuseIsOpen}">
+      <article>
+        <div class="accuse_close_btn">
+          <button type="button" class="impeachment_close_btn" @click="btn_modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <h3>檢舉這篇文章的原因？</h3>
+        <div class="accuse_wrap">
+          <p>
+            <input type="radio" name="accuse" id="" />
+            重傷、歧視、挑釁、謾罵他人
+          </p>
+          <p><input type="radio" name="accuse" id="" /> 交換個人資料</p>
+          <p><input type="radio" name="accuse" id="" /> 惡意洗版、重複張貼</p>
+          <p>
+            <input type="radio" name="accuse" id="" />
+            包含色情、露點、性騷擾之內容
+          </p>
+          <p>
+            <input type="radio" name="accuse" id="" /> 包含廣告、商業宣傳之內容
+          </p>
+          <p><input type="radio" name="accuse" id="" /> 其他原因</p>
+        </div>
+        <div class="accuse_send_btn">
+          <button class="impeachment_send_btn btn_third">送出</button>
+        </div>
+      </article>
+    </div>
+  </div>
+
+
+ @@include('app/footer.html') @@include('app/script.html')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://kit.fontawesome.com/d18b20bddd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
+  <script src="js/forum/forum_discuss.js"></script>
+  <script>
+
+
+  </script>
+</body>
+
+</html>
